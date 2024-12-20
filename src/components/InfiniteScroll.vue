@@ -8,26 +8,25 @@ import { useSearchStore } from '@/stores/search';
 import { useInfiniteScroll } from '@vueuse/core';
 
 const props = defineProps<{searchValue: string}>()
-const searchValue = ref("");
+const searchValue = ref<string>("");
 
 const bookmarkStore = useBookmarkStore();
 const bookmarks = bookmarkStore.getBookmarks();
 const searchStore = useSearchStore();
 
+const result = ref<Repo[]>([])
 const fetchingData = ref<boolean>(false);
 
-
 watch(() => props.searchValue, async (newValue, oldValue) => {
-    console.log("search",newValue);
+    console.log("Watch search", newValue);
     searchStore.clearLinks()
     searchValue.value = newValue;
     result.value = await handleSearch(newValue)
 })
 
 const handleSearch = async(searchValue: string): Promise<Repo[]> => {
-    console.log("hello search");
+    console.log("Search", searchValue);
     const repos = await getRepos(searchValue);
-    console.log("hello?<<");
     repos.filter(i => i.isFavorite = i.id in bookmarks)
     return repos;
 }
@@ -38,17 +37,14 @@ const getReposOnScroll = async() => {
 
     if (next) {
         try {
-            fetchingData.value = true;
             const repos = await getReposByUrl(next.url);
             repos.filter(i => i.isFavorite = i.id in bookmarks)
             result.value.push(...repos);
-            fetchingData.value = false;
         }
         catch (err) {
             console.log(err);
         }
     }
-
     fetchingData.value = false;
 }
 
@@ -62,9 +58,6 @@ useInfiniteScroll(
     },
     { distance: 20 }
 )
-
-const result = ref<Repo[]>([])//ref(await handleSearch(props.searchValue));
-
 </script>
 
 <template>
