@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, type ComponentObjectPropsOptions } from 'vue';
 import GitHubCard from './GitHubCard.vue';
 import type { Repo } from './GitHubCard.vue';
 import { getRepos, getReposByUrl } from '@/api/getRepos';
 import { useBookmarkStore } from '@/stores/bookmark';
 import { useSearchStore } from '@/stores/search';
 import { useInfiniteScroll } from '@vueuse/core';
+import type { SearchValues } from '@/views/HomeView.vue';
 
-const props = defineProps<{searchValue: string}>()
+const props = defineProps<{search: string, language: string, star: number, goodIssues: boolean, helpWanted: boolean}>()
 const searchValue = ref<string>("");
 
 const bookmarkStore = useBookmarkStore();
@@ -17,16 +18,16 @@ const searchStore = useSearchStore();
 const result = ref<Repo[]>([])
 const fetchingData = ref<boolean>(false);
 
-watch(() => props.searchValue, async (newValue, oldValue) => {
+watch(() => props.search, async (newValue, oldValue) => {
     console.log("Watch search", newValue);
     searchStore.clearLinks()
     searchValue.value = newValue;
-    result.value = await handleSearch(newValue)
+    result.value = await handleSearch()
 })
 
-const handleSearch = async(searchValue: string): Promise<Repo[]> => {
-    console.log("Search", searchValue);
-    const repos = await getRepos(searchValue);
+const handleSearch = async(): Promise<Repo[]> => {
+    console.log("Search", props.search);
+    const repos = await getRepos(props.search, props.language, props.star, props.goodIssues, props.helpWanted);
     repos.filter(i => i.isFavorite = i.id in bookmarks)
     return repos;
 }

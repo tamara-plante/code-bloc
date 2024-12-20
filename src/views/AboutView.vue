@@ -7,7 +7,7 @@
             <h1>Code Bloc</h1>
             <h3 class="text-secondary">/blɑːk/</h3>
             <p class="text-secondary"><em>A combination of countries, parties, or groups sharing a common purpose.</em></p>
-            <p>Code bloc is a place to give visibility to open-source projects by making them easily searchable. It's about giving back by helping to increase contributions they received.</p>
+            <p>Code bloc is a place to give visibility to open-source projects by making them easily searchable. It's about giving back by helping to improve the amount of contributions they receive.</p>
         </div>
     </div>
 </template>

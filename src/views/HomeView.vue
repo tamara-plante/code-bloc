@@ -1,61 +1,61 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, useTemplateRef } from 'vue'
 import SearchBar from '@/components/SearchBar.vue';
 import InfiniteScroll from '@/components/InfiniteScroll.vue';
+import SearchFeatures from '@/components/SearchFeatures.vue';
 
-const search = ref<string>("");
-
-function handleSearch(searchValue: string) {
-    search.value = searchValue;
+export interface SearchValues {
+    search?: string;
+    language?: string;
+    star?: string;
+    isGoodIssues?: boolean;
+    isHelpWanted?: boolean;
 }
 
-/*
-async function handleSearch(searchValue: string) {
-    const repos = await getRepos(searchValue);
+const searchFeaturesRef = useTemplateRef("search-features-ref")
 
-    repos.filter(i => i.isFavorite = i.id in bookmarks)
-    result.value = repos;
+const searchValues = ref<SearchValues>({})
+const search = ref<string>("")
+let language = ref<string>("")
+const star = ref<number>(0)
+const isGoodIssues = ref<boolean>(false)
+const isHelpWanted = ref<boolean>(false)
 
-    
-    const queryString = 'q=' + encodeURIComponent(`${searchValue} license:MIT license:Apache-2.0 license:GPL-3.0 archived:false good-first-issues:>0`);
-    fetch(`https://api.github.com/search/repositories?${queryString}`)
-        .then(res => {
-            console.log(res.headers.get("Link"))
-            return res;
-        })
-        .then(res => res.json())
-        .then(res => {
-
-            //res.items.filter(i => bookmarkStore.test)
-            (res.items as Repo[]).filter(i => i.isFavorite = i.id in bookmarks)
-            return res;
-        })
-        .then(res => {
-            console.log("rest", res)
-            result.value = res.items
-            console.log("test", result.value)
-        })
-}*/
+function handleSearch(searchValue: string) {
+    search.value = searchValue
+    // Real search submit
+    const searchFeatures = searchFeaturesRef.value;
+    if (searchFeatures) {
+        language.value = searchFeatures.languageInput
+        star.value = searchFeatures.starInput
+        isGoodIssues.value = searchFeatures.isGoodIssuesInput
+        isHelpWanted.value = searchFeatures.isHelpWantedInput
+    }
+}
+function handleLanguage(languageValue: string) {
+    language.value = languageValue
+}
+function handleStar(starValue: number) {
+    star.value = starValue
+}
+function handleGoodIssues(goodIssues: boolean) {
+    isGoodIssues.value = goodIssues
+}
+function handleHelpWanted(helpWanted: boolean) {
+    isHelpWanted.value = helpWanted
+}
 
 </script>
 
 <template>
-  <main class="flex flex-col justify-center w-full mb-7">
-    <div class="mb-7 flex justify-center h-32">
-        <SearchBar @searchValue="handleSearch" />
+  <main class="flex flex-col items-center justify-center w-fullmb-7">
+    <div class="mb-7 flex flex-col justify-center h-48 w-full my-7">
+        <SearchBar @searchValue="handleSearch" class="mb-6" />
+        <SearchFeatures ref="search-features-ref" />
     </div>
 
-    <!--
-    <main>
-        <h1>Infinite scrolling</h1>
-        <Suspense>
-            <InfiniteScroll />
-            <template #fallback><p>Loading...</p></template>
-        </Suspense>
-        <p>Made with lalala</p>
-    </main>-->
     <Suspense>
-        <InfiniteScroll :searchValue="search" />
+        <InfiniteScroll :search="search" :language="language" :star="star" :goodIssues="isGoodIssues" :helpWanted="isHelpWanted" />
         <template #fallback><p>Loading...</p></template>
     </Suspense>
     <!--<div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-7 mx-7">

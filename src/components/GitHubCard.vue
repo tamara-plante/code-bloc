@@ -74,14 +74,14 @@ function toggleCard(event: Event, repo: Repo) {
             <p>{{ repo.description }}</p>
             <div class="divider"></div>
 
-            <div class="stats sm:stats-vertical md:stats-horizontal lg:stats-horizontal w-full shadow w-full mb-5">
+            <div class="stats sm:stats-vertical md:stats-horizontal lg:stats-horizontal w-full shadow mb-5">
                 <div class="stat place-items-center">
-                    <div class="stat-title text-primary">Stargazers</div>
+                    <div class="stat-title text-primary">Stars</div>
                     <div class="stat-value text-primary">{{ numbers(repo.stargazers_count) }}</div>
                 </div>
 
                 <div class="stat place-items-center">
-                    <div class="stat-title text-accent">Open Issues</div>
+                    <div class="stat-title text-accent">Issues</div>
                     <div class="stat-value text-accent">{{ numbers(repo.open_issues_count) }}</div>
                 </div>
 

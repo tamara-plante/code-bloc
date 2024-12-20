@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import type { Repo } from '@/components/GitHubCard.vue';
 
+
 export const useBookmarkStore = defineStore('bookmark', {
     state: () => ({
         bookmarks: {} as Record<number,Repo>

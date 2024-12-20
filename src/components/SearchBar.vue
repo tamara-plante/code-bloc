@@ -4,12 +4,13 @@ import { ref, useTemplateRef } from 'vue'
 const emit = defineEmits(["searchValue"])
 const searchInput = useTemplateRef("searchInput")
 
-const focused = ref(false)
-const searchValue = ref("")
+const focused = ref<boolean>(false)
+const searchValue = ref<string>("")
 
 function search() {
+    console.log("humm>")
     emit("searchValue", searchValue.value)
-    searchValue.value = ""
+    //searchValue.value = ""
 }
 
 function reset() {
@@ -19,7 +20,7 @@ function reset() {
 
 </script>
 <template>
-    <form @submit.prevent="search" @reset="reset">
+    <form @submit.prevent="search" @reset="reset" class="flex justify-center">
         <div class="join">
             <label class="input input-bordered flex min-w-72 w-96 items-center gap-2 join-item" :class="focused && 'input-secondary'">
                 <svg
