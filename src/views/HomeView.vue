@@ -2,32 +2,22 @@
 import { ref, computed } from 'vue'
 import SearchBar from '@/components/SearchBar.vue';
 import InfiniteScroll from '@/components/InfiniteScroll.vue';
-import IconGithub from '@/components/icons/IconGithub.vue';
-import ToggleBookmark from '@/components/ToggleBookmark.vue';
-import GitHubCard from '@/components/GitHubCard.vue';
 
-interface Repo {
-    id: number;
-    full_name: string;
-    description: string;
-    language: string;
-    html_url: string;
-    forks_count: number;
-    open_issues_count: number;
-    stargazers_count: number;
-    watchers_count: number;
-    updated_at: string;
-    license: {
-        name: string;
-    };
-    isFavorite: boolean;
-}
-
-const result = ref<Repo[]>([]);
-
+const search = ref<string>("");
 
 function handleSearch(searchValue: string) {
-    const queryString = 'q=' + encodeURIComponent(`${searchValue} license:MIT license:Apache-2.0 license:GPL-3.0 good-first-issues:>0`);
+    search.value = searchValue;
+}
+
+/*
+async function handleSearch(searchValue: string) {
+    const repos = await getRepos(searchValue);
+
+    repos.filter(i => i.isFavorite = i.id in bookmarks)
+    result.value = repos;
+
+    
+    const queryString = 'q=' + encodeURIComponent(`${searchValue} license:MIT license:Apache-2.0 license:GPL-3.0 archived:false good-first-issues:>0`);
     fetch(`https://api.github.com/search/repositories?${queryString}`)
         .then(res => {
             console.log(res.headers.get("Link"))
@@ -35,23 +25,17 @@ function handleSearch(searchValue: string) {
         })
         .then(res => res.json())
         .then(res => {
+
+            //res.items.filter(i => bookmarkStore.test)
+            (res.items as Repo[]).filter(i => i.isFavorite = i.id in bookmarks)
+            return res;
+        })
+        .then(res => {
             console.log("rest", res)
             result.value = res.items
             console.log("test", result.value)
         })
-}
-
-const numbers = (current: number) => computed(() => {
-    let newNumber = current.toString();
-    if (current > 999) {
-        newNumber = (current / 1000).toFixed(1) + "K";
-    }
-    return newNumber;
-})
-const dates = (current: string) => computed(() => {
-    const date = new Date(current);
-    return date.toLocaleDateString();
-})
+}*/
 
 </script>
 
@@ -70,9 +54,12 @@ const dates = (current: string) => computed(() => {
         </Suspense>
         <p>Made with lalala</p>
     </main>-->
-
-    <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-7 mx-7">
-        <GitHubCard v-for="repo in result" :key="repo.id" :repo="repo" />
+    <Suspense>
+        <InfiniteScroll :searchValue="search" />
+        <template #fallback><p>Loading...</p></template>
+    </Suspense>
+    <!--<div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-7 mx-7">
+        <GitHubCard v-for="repo in result" :key="repo.id" :repo="repo" />-->
         <!--<div v-for="repo in result" class="card parent bg-neutral w-full shadow-xl">
             <div class="card-body">
                 <div class="flex justify-between">
@@ -112,7 +99,7 @@ const dates = (current: string) => computed(() => {
                 </div>
             </div>
         </div>-->
-    </div>
+    <!--</div>-->
   </main>
 </template>
 

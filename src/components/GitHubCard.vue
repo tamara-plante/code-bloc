@@ -3,8 +3,9 @@ import { computed, ref } from 'vue';
 import IconGithub from '@/components/icons/IconGithub.vue';
 import ToggleInfo from '@/components/ToggleInfo.vue';
 import ToggleBookmark from '@/components/ToggleBookmark.vue';
+import { useBookmarkStore } from '@/stores/bookmark'
 
-interface Repo {
+export interface Repo {
     id: number;
     full_name: string;
     description: string;
@@ -21,7 +22,7 @@ interface Repo {
     isFavorite: boolean;
 }
 
-
+const bookmarkStore = useBookmarkStore();
 const props = defineProps<{repo: Repo}>();
 const repo = ref(props.repo);
 
@@ -40,7 +41,13 @@ const dates = (current: string) => computed(() => {
 function handleFavorite(isFavorite: boolean, repo: Repo) {
     repo.isFavorite = isFavorite;
 
-    // Save to history
+    if (isFavorite) {
+        // Add bookmark
+        bookmarkStore.addBookmark(repo.id, repo);
+    }
+    else {
+        bookmarkStore.removeBookmark(repo.id);
+    }
 }
 
 function toggleCard(event: Event, repo: Repo) {
@@ -60,14 +67,14 @@ function toggleCard(event: Event, repo: Repo) {
                         <i><IconGithub /></i>
                     </a>
                     <button class="btn-toggle" @click="toggleCard($event, repo)"><i><ToggleInfo /></i></button>
-                    <ToggleBookmark @isFavorite="handleFavorite($event, repo)" :class="{'btn-toggle': !repo.isFavorite}" />
+                    <ToggleBookmark :isFavorite="repo.isFavorite"  @isFavorite="handleFavorite($event, repo)" :class="{'btn-toggle': !repo.isFavorite}" />
                 </div>
             </div>
             <h2 class="card-title mb-2">{{ repo.full_name }}</h2>
             <p>{{ repo.description }}</p>
             <div class="divider"></div>
 
-            <div class="stats sm:stats-vertical md:stats-horizontal lg:stats-horizontal shadow w-full mb-5">
+            <div class="stats sm:stats-vertical md:stats-horizontal lg:stats-horizontal w-full shadow w-full mb-5">
                 <div class="stat place-items-center">
                     <div class="stat-title text-primary">Stargazers</div>
                     <div class="stat-value text-primary">{{ numbers(repo.stargazers_count) }}</div>

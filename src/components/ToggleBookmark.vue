@@ -3,10 +3,11 @@ import { ref } from 'vue';
 import IconHeartEmpty from './icons/IconHeartEmpty.vue';
 import IconHeartFull from './icons/IconHeartFull.vue';
 
+const props = defineProps<{isFavorite: boolean}>()
 const emit = defineEmits(["isFavorite"])
 
 
-const isFavorite = ref<boolean>(false);
+const isFavorite = ref<boolean>(props.isFavorite);
 
 function handleToggle() {
     isFavorite.value = !isFavorite.value;
