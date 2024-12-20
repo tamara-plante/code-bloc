@@ -66,7 +66,7 @@ function toggleCard(event: Event, repo: Repo) {
                     <a :href=repo.html_url target="_blank" rel="noopener" class="btn-toggle">
                         <i><IconGithub /></i>
                     </a>
-                    <button class="btn-toggle" @click="toggleCard($event, repo)"><i><ToggleInfo /></i></button>
+                    <!--<button class="btn-toggle" @click="toggleCard($event, repo)"><i><ToggleInfo /></i></button>-->
                     <ToggleBookmark :isFavorite="repo.isFavorite"  @isFavorite="handleFavorite($event, repo)" :class="{'btn-toggle': !repo.isFavorite}" />
                 </div>
             </div>

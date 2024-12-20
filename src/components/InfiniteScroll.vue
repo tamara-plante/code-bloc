@@ -9,7 +9,6 @@ import { useInfiniteScroll } from '@vueuse/core';
 import type { SearchValues } from '@/views/HomeView.vue';
 import IconUpArrow from './icons/IconUpArrow.vue';
 
-const props = defineProps<{search: string, language: string, star: number, goodIssues: boolean, helpWanted: boolean}>()
 const searchValue = ref<string>("");
 
 const bookmarkStore = useBookmarkStore();
@@ -18,19 +17,20 @@ const searchStore = useSearchStore();
 
 const result = ref<Repo[]>([])
 const fetchingData = ref<boolean>(false);
-
+/*
 watch(() => props.search, async (newValue, oldValue) => {
     console.log("Watch search", newValue);
     searchStore.clearLinks()
     searchValue.value = newValue;
     result.value = await handleSearch()
-})
+})*/
 
-const handleSearch = async(): Promise<Repo[]> => {
-    console.log("Search", props.search);
-    const repos = await getRepos(props.search, props.language, props.star, props.goodIssues, props.helpWanted);
+const handleSearch = async(search: string, language: string, star: number, goodIssues: boolean, helpWanted: boolean) => {
+    console.log("Search", search);
+    searchValue.value = search;
+    const repos = await getRepos(search, language, star, goodIssues, helpWanted);
     repos.filter(i => i.isFavorite = i.id in bookmarks)
-    return repos;
+    result.value = repos;
 }
 
 defineExpose({handleSearch})

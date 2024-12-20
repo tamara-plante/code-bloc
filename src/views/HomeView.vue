@@ -3,6 +3,7 @@ import { ref, computed, useTemplateRef } from 'vue'
 import SearchBar from '@/components/SearchBar.vue';
 import InfiniteScroll from '@/components/InfiniteScroll.vue';
 import SearchFeatures from '@/components/SearchFeatures.vue';
+import { useSearchStore } from '@/stores/search';
 
 export interface SearchValues {
     search?: string;
@@ -13,26 +14,25 @@ export interface SearchValues {
 }
 
 const searchFeaturesRef = useTemplateRef("search-features-ref")
-
-const searchValues = ref<SearchValues>({})
-const search = ref<string>("")
-let language = ref<string>("")
-const star = ref<number>(0)
-const isGoodIssues = ref<boolean>(false)
-const isHelpWanted = ref<boolean>(false)
+const infiniteSearch = useTemplateRef("handle-search")
 
 
 function handleSearch(searchValue: string) {
-    console.log("hlelo?");
-    search.value = "" // Force to see a change.
-    search.value = searchValue
     // Real search submit
     const searchFeatures = searchFeaturesRef.value;
     if (searchFeatures) {
-        language.value = searchFeatures.languageInput
-        star.value = searchFeatures.starInput
-        isGoodIssues.value = searchFeatures.isGoodIssuesInput
-        isHelpWanted.value = searchFeatures.isHelpWantedInput
+        if (infiniteSearch.value) {
+            const searchStore = useSearchStore()
+            searchStore.clearLinks()
+
+            // Trigger infinite handleSearch
+            infiniteSearch.value.handleSearch(
+                searchValue, 
+                searchFeatures.languageInput, 
+                searchFeatures.starInput,
+                searchFeatures.isGoodIssuesInput, 
+                searchFeatures.isHelpWantedInput);
+        }
     }
 }
 
@@ -46,7 +46,7 @@ function handleSearch(searchValue: string) {
         <SearchFeatures ref="search-features-ref" />
     </div>
     <Suspense>
-        <InfiniteScroll :search="search" :language="language" :star="star" :goodIssues="isGoodIssues" :helpWanted="isHelpWanted" />
+        <InfiniteScroll ref="handle-search" />
         <template #fallback><p>Loading...</p></template>
     </Suspense>
     <!--<div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-7 mx-7">
