@@ -58,8 +58,11 @@
   font-weight: normal;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    position: relative;
   min-height: 100vh;
   /*color: var(--color-text);
   background: var(--color-background);*/

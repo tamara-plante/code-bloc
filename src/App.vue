@@ -2,16 +2,16 @@
 </script>
 
 <template>
-    <div class="flex flex-col min-h-screen">
+    <div class="flex flex-col min-h-screen relative">
         <header class="h-32 mb-5">
             <div class="flex justify-center">
                 <div class="circle"><img src="@/assets/code-bloc-white.png" alt="code bloc logo"></div>
             </div>
             <div class="wrapper">
                 <nav class="flex justify-center gap-9 pb-5">
-                    <RouterLink to="/" active-class="text-secondary underline">Home</RouterLink>
-                    <RouterLink to="/bookmarks" active-class="text-secondary underline">Bookmarks</RouterLink>
-                    <RouterLink to="/about" active-class="text-secondary underline">About</RouterLink>
+                    <RouterLink to="/" active-class="text-secondary">Home</RouterLink>
+                    <RouterLink to="/bookmarks" active-class="text-secondary">Bookmarks</RouterLink>
+                    <RouterLink to="/about" active-class="text-secondary">About</RouterLink>
                 </nav>
             </div>
         </header>

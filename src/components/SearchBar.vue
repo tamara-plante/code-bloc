@@ -8,7 +8,6 @@ const focused = ref<boolean>(false)
 const searchValue = ref<string>("")
 
 function search() {
-    console.log("humm>")
     emit("searchValue", searchValue.value)
     //searchValue.value = ""
 }

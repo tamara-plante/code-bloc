@@ -21,7 +21,10 @@ const star = ref<number>(0)
 const isGoodIssues = ref<boolean>(false)
 const isHelpWanted = ref<boolean>(false)
 
+
 function handleSearch(searchValue: string) {
+    console.log("hlelo?");
+    search.value = "" // Force to see a change.
     search.value = searchValue
     // Real search submit
     const searchFeatures = searchFeaturesRef.value;
@@ -32,28 +35,16 @@ function handleSearch(searchValue: string) {
         isHelpWanted.value = searchFeatures.isHelpWantedInput
     }
 }
-function handleLanguage(languageValue: string) {
-    language.value = languageValue
-}
-function handleStar(starValue: number) {
-    star.value = starValue
-}
-function handleGoodIssues(goodIssues: boolean) {
-    isGoodIssues.value = goodIssues
-}
-function handleHelpWanted(helpWanted: boolean) {
-    isHelpWanted.value = helpWanted
-}
+
 
 </script>
 
 <template>
-  <main class="flex flex-col items-center justify-center w-fullmb-7">
+  <main class="flex flex-col items-center justify-center w-full mb-9">
     <div class="mb-7 flex flex-col justify-center h-48 w-full my-7">
         <SearchBar @searchValue="handleSearch" class="mb-6" />
         <SearchFeatures ref="search-features-ref" />
     </div>
-
     <Suspense>
         <InfiniteScroll :search="search" :language="language" :star="star" :goodIssues="isGoodIssues" :helpWanted="isHelpWanted" />
         <template #fallback><p>Loading...</p></template>
@@ -105,5 +96,9 @@ function handleHelpWanted(helpWanted: boolean) {
 
 <style scoped>
 
-
+.to-top {
+    position: absolute;
+    bottom: 0px;
+   left: 0;
+}
 </style>
